@@ -8,7 +8,7 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "deep-learning-hfdeepspeed-ubuntu"
+  ami_name      = "deep-learning-huggingface-ubuntu-{{isotime \"2006-01-02\"}}"
   instance_type = "t3.xlarge"
   region        = "eu-west-1"
   source_ami_filter {

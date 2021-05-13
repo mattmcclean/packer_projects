@@ -9,6 +9,7 @@ source ~/anaconda3/etc/profile.d/conda.sh
 conda activate hfdeepspeed_p37
 pip install torch torchvision torchaudio
 pip install ray[default]
+pip install boto3
 pip install git+https://github.com/microsoft/DeepSpeed
 pip install git+https://github.com/huggingface/transformers
 

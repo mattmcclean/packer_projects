@@ -11,4 +11,7 @@ pip install -U --upgrade torch-neuron neuron-cc[tensorflow] torchvision
 pip install -U "transformers==4.4.1"
 pip install tensorboard
 
+# remove to avoid ulimit issues
+sudo rm /etc/security/limits.d/efa.conf
+
 echo 'export PATH="$HOME/anaconda3/envs/aws_neuron_pytorch_p36/bin:$PATH"' >> ~/.bashrc
