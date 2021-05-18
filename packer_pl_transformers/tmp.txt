@@ -1,0 +1,1 @@
+export PATH="$HOME/anaconda3/envs/pl_transformers_p37/bin:$PATH"
