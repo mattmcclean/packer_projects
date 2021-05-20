@@ -16,7 +16,16 @@ sudo tar xvfz $HOME/prometheus.tar.gz -C /opt
 sudo ln -s /opt/prometheus-2.27.0.linux-amd64 /opt/prometheus
 rm $HOME/prometheus.tar.gz
 
+# Install CloudWatch agent
+echo "Installing CloudWatch agent"
+wget -qO $HOME/amazon-cloudwatch-agent.deb https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+sudo apt install $HOME/amazon-cloudwatch-agent.deb
+rm $HOME/amazon-cloudwatch-agent.deb
+sudo apt-get install collectd -y
+sudo usermod -aG adm cwagent
+
 # Install the Conda environment
+echo "Setup PyTorch, PyTorch Lightning, Transformers conda env"
 ENV_NAME=pl_transformers_p37
 conda create --yes -n ${ENV_NAME} python=3.7
 source ~/anaconda3/etc/profile.d/conda.sh
@@ -40,6 +49,7 @@ pip install mlflow
 pip install tensorboardX tensorboard
 
 # setup AutoGluon environment
+echo "Setup Autogluon conda env"
 ENV_NAME=autogluon_p37
 conda create --yes -n ${ENV_NAME} python=3.7
 source ~/anaconda3/etc/profile.d/conda.sh
@@ -51,6 +61,7 @@ pip install jupyter tensorboard
 python -m ipykernel install --user --name=${ENV_NAME}
 
 # setup inferentia environment
+echo "Setup Inferentia env"
 ENV_NAME=aws_neuron_pytorch_p36
 source ~/anaconda3/etc/profile.d/conda.sh
 conda activate ${ENV_NAME}
