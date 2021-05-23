@@ -24,44 +24,19 @@ rm $HOME/amazon-cloudwatch-agent.deb
 sudo apt-get install collectd -y
 sudo usermod -aG adm cwagent
 
-# Install the Conda environment
-echo "Setup PyTorch, PyTorch Lightning, Transformers conda env"
-ENV_NAME=pl_transformers_p37
-conda create --yes -n ${ENV_NAME} python=3.7
+# activate to install conda envs
 source ~/anaconda3/etc/profile.d/conda.sh
-conda activate ${ENV_NAME}
-pip install torch torchvision torchaudio
-pip install pytorch-lightning  
-pip install ray[default] ray[tune] ray[serve]
-pip install boto3
-pip install transformers
-pip install ipykernel matplotlib ipywidgets
-pip install tensorboardX
-pip install webdataset
 
-# install a ipykernel in enviornment
-python -m ipykernel install --user --name=${ENV_NAME}
-echo 'export PATH="$HOME/anaconda3/envs/'${ENV_NAME}'/bin:$PATH"' >> ~/.bashrc
-
-# setup tensorboard and mlflow
-conda activate base
-pip install mlflow
-pip install tensorboardX tensorboard
-
-# setup AutoGluon environment
-echo "Setup Autogluon conda env"
-ENV_NAME=autogluon_p37
-conda create --yes -n ${ENV_NAME} python=3.7
-source ~/anaconda3/etc/profile.d/conda.sh
-conda activate ${ENV_NAME}
-pip install "mxnet_cu101<2.0.0"
-pip install autogluon
-pip install ray[default] ray[tune] ray[serve]
-pip install jupyter tensorboard
-python -m ipykernel install --user --name=${ENV_NAME}
+# install the conda envs
+FILES="conda_envs/*.yaml"
+for f in $FILES
+do
+    echo "Creating conda env with $f file..."
+    conda env create -f $f
+done
 
 # setup inferentia environment
-echo "Setup Inferentia env"
+echo "Update the Inferentia env"
 ENV_NAME=aws_neuron_pytorch_p36
 source ~/anaconda3/etc/profile.d/conda.sh
 conda activate ${ENV_NAME}
@@ -70,4 +45,16 @@ pip config set global.extra-index-url https://pip.repos.neuron.amazonaws.com
 pip install -U --upgrade torch-neuron neuron-cc[tensorflow] torchvision
 pip install -U "transformers==4.4.1"
 pip install tensorboard
-python -m ipykernel install --user --name=${ENV_NAME}
+
+# setup tensorboard and mlflow
+conda activate base
+pip install mlflow
+pip install tensorboardX tensorboard
+
+# install the ipykernel in each env
+for env in "pl_transformers_p37" "autogluon_p37" "pl-ray-mlflow"
+do
+    echo "Setting up ipykernel in env: $env"
+    conda activate ${env}
+    python -m ipykernel install --user --name=${env}
+done

@@ -1,0 +1,20 @@
+name: pl-ray-mlflow
+channels:
+- defaults
+- conda-forge
+- pytorch
+dependencies:
+- python=3.7
+- pytorch=1.8.1
+- pip
+- pip:
+  - mlflow
+  - torchvision==0.9.1
+  - pytorch-lightning<1.2
+  - ray[tune]
+  - ray[default]
+  - pytorch-lightning-bolts
+  - ipykernel
+  - matplotlib
+  - ipywidgets
+  - boto3

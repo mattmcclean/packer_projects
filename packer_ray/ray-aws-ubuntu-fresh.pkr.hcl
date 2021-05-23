@@ -8,7 +8,7 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "deep-learning-ray-ubuntu-{{isotime \"2006-01-02\"}}"
+  ami_name      = "deep-learning-ray-ubuntu-{{timestamp}}"
   instance_type = "t3.xlarge"
   region        = "eu-west-1"
   source_ami_filter {
@@ -17,6 +17,10 @@ source "amazon-ebs" "ubuntu" {
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
+    launch_block_device_mappings {
+          device_name = "/dev/sda1"
+          volume_size = "150"
+    }    
     most_recent = true
     owners      = ["898082745236"]
   }
@@ -27,6 +31,11 @@ build {
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
+
+  provisioner "file" {
+      source = "conda_envs"
+      destination = "/home/ubuntu"
+  }  
 
   provisioner "shell" {
     scripts = [

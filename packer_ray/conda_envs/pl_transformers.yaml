@@ -1,0 +1,22 @@
+name: pl_transformers_p37
+channels:
+- defaults
+- conda-forge
+- pytorch
+dependencies:
+- python=3.7
+- pytorch=1.8.1
+- pip
+- pip:
+  - mlflow
+  - ray[tune]
+  - ray[default]
+  - pytorch-lightning
+  - pytorch-lightning-bolts
+  - transformers
+  - tensorboardX
+  - webdataset
+  - boto3
+  - ipykernel
+  - matplotlib
+  - ipywidgets
