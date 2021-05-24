@@ -17,14 +17,14 @@ source "amazon-ebs" "ubuntu" {
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
-    launch_block_device_mappings {
-          device_name = "/dev/sda1"
-          volume_size = "150"
-    }    
     most_recent = true
     owners      = ["898082745236"]
   }
   ssh_username = "ubuntu"
+  launch_block_device_mappings {
+        device_name = "/dev/sda1"
+        volume_size = "150"
+  }
 }
 
 build {
@@ -41,6 +41,6 @@ build {
     scripts = [
       "setup_ami.sh"
     ]
-    pause_before = "600s"
+#    pause_before = "600s"
   }
 }

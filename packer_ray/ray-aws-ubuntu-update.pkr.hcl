@@ -42,6 +42,4 @@ build {
       "update_ami.sh"
     ]
   }
-
-
 }

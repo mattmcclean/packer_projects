@@ -1,4 +1,4 @@
-name: pl-ray-mlflow
+name: pl_ray_mlflow_p37
 channels:
 - defaults
 - conda-forge

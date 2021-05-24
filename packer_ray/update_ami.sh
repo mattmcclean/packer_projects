@@ -1,9 +1,13 @@
 #!/bin/bash -ex
 
-source ~/anaconda3/etc/profile.d/conda.sh
+function wait-apt-get() { while fuser -s /var/lib/dpkg/lock; do echo 'apt-get is waiting for the lock release ...'; sleep 1; done; sudo /usr/bin/apt-get "$@"; }
 
-conda env remove -n pl-ray-mlflow
-conda env create -f conda_envs/pl-ray-mlflow.yaml
+#lsof /var/lib/dpkg/lock-frontend
+#sudo pkill -9 pid
+#sudo rm /var/lib/dpkg/lock-frontend
+#sudo dpkg --configure -a
+
+wait-apt-get install jq -y
 
 #FILES="conda_envs/*.yaml"
 #for f in $FILES

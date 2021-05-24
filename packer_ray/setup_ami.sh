@@ -1,10 +1,14 @@
 #!/bin/bash -ex
 
+sudo pkill -9 apt-get || true
+sudo pkill -9 dpkg || true
+sudo dpkg --configure -a
+
 sudo apt-get update
 sudo apt-get upgrade -y
 
 # install supervisor
-sudo apt install supervisor -y
+sudo apt install supervisor jq -y
 
 # remove the efa conf file with ulimit set too low
 sudo rm /etc/security/limits.d/efa.conf
@@ -33,28 +37,26 @@ for f in $FILES
 do
     echo "Creating conda env with $f file..."
     conda env create -f $f
+    env=$(basename "$f" .yaml)
+    echo "Setting up ipykernel in env: $env"
+    conda activate ${env}
+    python -m ipykernel install --user --name=${env}
+    conda deactivate
 done
 
 # setup inferentia environment
-echo "Update the Inferentia env"
-ENV_NAME=aws_neuron_pytorch_p36
-source ~/anaconda3/etc/profile.d/conda.sh
-conda activate ${ENV_NAME}
-pip install -U ray ray[tune] ray[serve]
-pip config set global.extra-index-url https://pip.repos.neuron.amazonaws.com
-pip install -U --upgrade torch-neuron neuron-cc[tensorflow] torchvision
-pip install -U "transformers==4.4.1"
-pip install tensorboard
+#echo "Update the Inferentia env"
+#ENV_NAME=aws_neuron_pytorch_p36
+#source ~/anaconda3/etc/profile.d/conda.sh
+#conda activate ${ENV_NAME}
+#pip install -U ray ray[tune] ray[serve]
+#pip config set global.extra-index-url https://pip.repos.neuron.amazonaws.com
+#pip install -U --upgrade torch-neuron neuron-cc[tensorflow] torchvision
+#pip install -U "transformers==4.4.1"
+#pip install tensorboard
 
 # setup tensorboard and mlflow
 conda activate base
 pip install mlflow
 pip install tensorboardX tensorboard
-
-# install the ipykernel in each env
-for env in "pl_transformers_p37" "autogluon_p37" "pl-ray-mlflow"
-do
-    echo "Setting up ipykernel in env: $env"
-    conda activate ${env}
-    python -m ipykernel install --user --name=${env}
-done
+conda deactivate
