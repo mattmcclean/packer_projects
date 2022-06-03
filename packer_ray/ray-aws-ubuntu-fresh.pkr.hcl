@@ -11,6 +11,7 @@ source "amazon-ebs" "ubuntu" {
   ami_name      = "deep-learning-ray-ubuntu-{{timestamp}}"
   instance_type = "t3.xlarge"
   region        = "eu-west-1"
+  ami_regions   = [ "us-east-1", "us-east-2", "us-west-2", "eu-central-1" ]
   source_ami_filter {
     filters = {
       name                = "Deep Learning AMI (Ubuntu 18.04) Version *"

@@ -8,7 +8,7 @@ sudo apt-get update
 sudo apt-get upgrade -y
 
 # install supervisor
-sudo apt install supervisor jq -y
+sudo apt install supervisor jq ec2-instance-connect -y
 
 # remove the efa conf file with ulimit set too low
 sudo rm /etc/security/limits.d/efa.conf
@@ -41,6 +41,11 @@ do
     echo "Setting up ipykernel in env: $env"
     conda activate ${env}
     python -m ipykernel install --user --name=${env}
+    if [ "${env}" = "autogluon_p37" ]; then
+        echo "Installing GPU version of lightgbm"
+        pip uninstall lightgbm -y
+        pip install lightgbm --install-option=--gpu
+    fi
     conda deactivate
 done
 

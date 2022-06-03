@@ -12,10 +12,13 @@ dependencies:
   - ray[tune]
   - ray[default]
   - pytorch-lightning
+  - torchvision
+  - git+https://github.com/ray-project/ray_lightning#ray_lightning
   - pytorch-lightning-bolts
   - transformers
   - tensorboardX
   - webdataset
+  - deepspeed
   - boto3
   - ipykernel
   - matplotlib
