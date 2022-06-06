@@ -30,3 +30,6 @@ sudo service docker restart
 # install ECS agent
 curl -O https://s3.eu-west-1.amazonaws.com/amazon-ecs-agent-eu-west-1/amazon-ecs-init-latest.amd64.deb
 sudo dpkg -i amazon-ecs-init-latest.amd64.deb
+sudo systemctl enable ecs
+sudo systemctl stop ecs
+sudo rm -rf /var/lib/ecs/data/*
