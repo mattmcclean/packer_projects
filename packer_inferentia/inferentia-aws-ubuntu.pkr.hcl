@@ -8,8 +8,8 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "deep-learning-inferentia-ubuntu-{{isotime \"2006-01-02T03_04_05\"}}"
-  instance_type = "t3.xlarge"
+  ami_name      = "deep-learning-inferentia-ubuntu-{{isotime \"2006-01-02T16_04_05\"}}"
+  instance_type = "t3.2xlarge"
   region        = "eu-west-1"
   source_ami_filter {
     filters = {
@@ -32,6 +32,12 @@ build {
     scripts = [
       "install_inferentia.sh"
     ]
-    pause_before = "600s"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo systemctl enable apt-daily.timer",
+      "sudo systemctl enable apt-daily-upgrade.timer",
+    ]
   }
 }

@@ -1,5 +1,34 @@
 #!/bin/bash -ex
 
+export DEBIAN_FRONTEND=noninteractive
+/usr/bin/cloud-init status --wait
+
+function killService() {
+    service=$1
+    sudo systemctl stop $service
+    sudo systemctl kill --kill-who=all $service
+
+    # Wait until the status of the service is either exited or killed.
+    while ! (sudo systemctl status "$service" | grep -q "Main.*code=\(exited\|killed\)")
+    do
+        sleep 10
+    done
+}
+
+function disableTimers() {
+    sudo systemctl disable apt-daily.timer
+    sudo systemctl disable apt-daily-upgrade.timer
+}
+
+function killServices() {
+    killService unattended-upgrades.service
+    killService apt-daily.service
+    killService apt-daily-upgrade.service
+}
+
+disableTimers
+killServices
+
 sudo apt-get update -y
 
 # install neuron drivers
@@ -30,6 +59,8 @@ sudo service docker restart
 # install ECS agent
 curl -O https://s3.eu-west-1.amazonaws.com/amazon-ecs-agent-eu-west-1/amazon-ecs-init-latest.amd64.deb
 sudo dpkg -i amazon-ecs-init-latest.amd64.deb
-sudo systemctl enable ecs
-sudo systemctl stop ecs
-sudo rm -rf /var/lib/ecs/data/*
+#sudo sed -i 's/After=docker.service/After=docker.service\nAfter=cloud-final.service/g' /lib/systemd/system/ecs.service
+#sudo systemctl daemon-reload
+#sudo systemctl stop ecs
+#sudo rm -rf /var/lib/ecs/data/*
+#sudo systemctl enable ecs
