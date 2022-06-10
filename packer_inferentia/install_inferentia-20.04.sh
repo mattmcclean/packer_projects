@@ -32,13 +32,11 @@ sudo apt-get update -y
 # Install OS headers
 sudo apt-get install linux-headers-$(uname -r) -y
 
-# Install Neuron Driver
+# Install Neuron Driver and tools
 sudo apt-get install aws-neuron-dkms -y
 sudo apt-get install aws-neuron-runtime-base -y
-# Install Neuron Tools
 sudo apt-get install aws-neuron-tools -y
-
-export PATH=/opt/aws/neuron/bin:$PATH
+echo "export PATH=/opt/aws/neuron/bin:$PATH" >> ~/.bashrc
 
 # install OCI add hooks
 cd /tmp
