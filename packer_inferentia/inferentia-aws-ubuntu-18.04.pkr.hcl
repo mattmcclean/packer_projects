@@ -30,7 +30,7 @@ build {
 
   provisioner "shell" {
     scripts = [
-      "install_inferentia.sh"
+      "install_inferentia-18.04.sh"
     ]
   }
 
